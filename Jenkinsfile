@@ -10,11 +10,12 @@ pipeline {
                 }
             }
             steps {
+                cleanWs()
                 sh '''
                     ls -la
                     node --version
                     npm --version
-                    npm install --foreground-scripts
+                    npm ci
                     npm run build
                     ls -la
                 '''
