@@ -14,7 +14,7 @@ pipeline {
                     ls -la
                     node --version
                     npm --version
-                    npm install
+                    npm install --foreground-scripts
                     npm run build
                     ls -la
                 '''
