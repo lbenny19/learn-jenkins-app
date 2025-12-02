@@ -1,24 +1,18 @@
 pipeline {
     agent any
-
     stages {
-        stage('Build') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
+
+        stage('Checkout') {
             steps {
-                cleanWs()
-                sh '''
-                    ls -la
-                    node --version
-                    npm --version
-                    npm ci
-                    npm run build
-                    ls -la
-                '''
+                checkout scm
+            }
+        }
+
+        stage('Upload to Artifactory') {
+            steps {
+                sh """
+                    curl -u lbenny:Purvapalm1804@ -T log.txt "https://luxproject.luxoft.com/artifactory/hgnsd-git_lfs/cmeta2"
+                """
             }
         }
     }
