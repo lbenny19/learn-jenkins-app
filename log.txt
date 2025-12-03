@@ -1,3 +1,4 @@
 added jenkinsfile
 trying from a codespace
 trying to create commit hash file
+testing build periodically
