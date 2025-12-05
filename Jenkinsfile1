@@ -1,5 +1,12 @@
 pipeline {
     agent any
+
+    environment {
+        ARTIFACTORY_URL = 'https://luxproject.luxoft.com/artifactory'
+        REPO = 'hgnsd-git_lfs'
+        CREDENTIALS = 'art_cred'
+    }
+
     stages {
 
         stage('Checkout') {
@@ -14,11 +21,21 @@ pipeline {
                     CMsg = sh(
                     script: "git log -1 --pretty=%s | cut -c1-11",
                     returnStdout: true).trim()
+                   
+                    def server = Artifactory.server('art_cred')
+
+                    def uploadSpec = """{
+                      "files": [{
+                        "pattern": "log.*",
+                        "target": "$REPO/${CMsg}/"
+                      }]
+                    }"""
+
+                    server.upload spec: uploadSpec, failNoOp: true
+
+
                 }
 
-                sh """
-                    curl -u lbenny:Purvapalm1804@ -T log.txt "https://luxproject.luxoft.com/artifactory/hgnsd-git_lfs/${CMsg}/log.txt"
-                """
             }
         }
     }
